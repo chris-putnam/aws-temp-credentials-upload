@@ -1,3 +1,5 @@
+An example of how to use server side credentials to generate temporary S3 credentials to upload a file from the web browser client
+
 Example S3 CORS configuration
 ```
 [
@@ -11,7 +13,7 @@ Example S3 CORS configuration
             "DELETE"
         ],
         "AllowedOrigins": [
-            "http://www.example1.com"
+            "*"
         ],
         "ExposeHeaders": [
           "ETag"
