@@ -1,8 +1,40 @@
-﻿@{
+﻿@model Amazon.SecurityToken.Model.Credentials
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <input type="file"
+       id="uploadfile" name="uploadfile">
 </div>
+
+<script defer>
+(() => {
+    AWS.config.update({
+        region: 'us-west-2',
+        credentials: @Html.Raw(Json.Serialize(@Model))
+    });
+
+    var bucket = new AWS.S3({
+        params: { Bucket: 'temp-credentials-test' }
+    });
+
+    const fileElement = document.getElementById('uploadfile');
+
+    fileElement.addEventListener('input', (event) => {
+        const file = event.srcElement.files[0];
+
+        bucket
+        .upload({
+            Key: file.name,
+            ContentType: file.type,
+            Body: file
+        })
+        .on('httpUploadProgress', (evt) => console.log('Progress:', evt.loaded, '/', evt.total))
+        .send((err, data) => console.log(err, data));
+    });
+})();
+</script>
